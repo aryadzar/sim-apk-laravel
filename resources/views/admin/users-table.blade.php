@@ -56,6 +56,15 @@
                 Tambah User
               </button>
         </div>
+        @if ($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
         <div class="col">
             <div class="card">
                 <div class="card-body">
@@ -83,19 +92,19 @@
                                 <td>{{$no++}}</td>
                                 <td>{{$data->nip}}</td>
                                 <td>
-                                    <img src="{{asset("foto_manager/".$data->foto)}}" alt="foto" width="50px" height="50px">
+                                    <img src="{{asset("foto_user/".$data->foto)}}" alt="foto" width="50px" height="50px">
                                 </td>
                                 <td> {{$data->username}} </td>
                                 <td> {{$data->name}} </td>
                                 <td width="15%">
                                     <a href="#" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail" ><i class=" ri-eye-line"></i></a>
-                                    <a href="#" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" ><i class="bi bi-trash"></i></a>
+                                    <a href="#" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-confirm-delete="true" data-bs-placement="top" title="Delete" ><i class="bi bi-trash"></i></a>
                                 </td>
                             </tr>
-                        </tbody>
 
-                        @endforeach
-                      </table>
+                            @endforeach
+                        </tbody>
+                        </table>
                       <!-- End Table with hoverable rows -->
 
                   </div>
@@ -130,18 +139,45 @@
                                 <td>{{$no++}}</td>
                                 <td>{{$data->nip}}</td>
                                 <td>
-                                    <img src="{{asset("foto_teknisi/".$data->foto)}}" alt="foto" width="50%" height="50%">
+                                    <img src="{{asset("foto_user/".$data->foto)}}" alt="foto"  height="100px">
                                 </td>
                                 <td> {{$data->username}} </td>
                                 <td> {{$data->name}} </td>
-                                <td>
+                                <td width="15%">
+                                    <a href="#" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail" ><i class=" ri-eye-line"></i></a>
+                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" data-bs-target="#delete_user{{$data->id}}" data-bs-toggle="modal">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
 
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="delete_user{{$data->id}}" data-bs-backdrop="static" tabindex="-1">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Hapus User</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="{{ route('delete_user', $data->id) }}" method="post">
+                                                        @csrf
+                                                        <input type="hidden" name="id" value="{{$data->id}}">
+                                                        <p>Apakah Anda yakin ingin menghapus pengguna ini?</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Modal -->
                                 </td>
                             </tr>
-                        </tbody>
 
-                        @endforeach
-                      </table>
+                            @endforeach
+                        </tbody>
+                        </table>
 
                   </div>
                   <!-- End Table with hoverable rows -->
@@ -160,7 +196,58 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="" method="post">
+                    <form action="/admin/data-users/tambah-user" method="post" enctype="multipart/form-data">
+                        @csrf
+                        <div class="row mb-3">
+                            <div class="col">
+                                <div class="form-floating mb-3">
+                                    <input type="number" name="nip" class="form-control @error('nip') is-invalid @enderror" id="nip" placeholder="NIP (Nomor Induk Pegawai)" value="{{ old('nip') }}" required>
+                                    <label for="nip">NIP (Nomor Induk Pegawai)</label>
+                                    @error('nip')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="name" placeholder="Nama User" value="{{ old('name') }}" required>
+                                    <label for="name">Nama User</label>
+                                    @error('name')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control @error('username') is-invalid @enderror" name="username" id="username" placeholder="Username" value="{{ old('username') }}" required>
+                                    <label for="username">Username</label>
+                                    @error('username')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" id="password" placeholder="Password" required>
+                                    <label for="password">Password</label>
+                                    @error('password')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="file" class="form-control @error('foto') is-invalid @enderror" name="foto" id="foto" accept=".jpg, .jpeg, .png" placeholder="Pilih Foto Profile" required>
+                                    <label for="foto">Pilih Foto Profile</label>
+                                    @error('foto')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <select class="form-select" id="role" aria-label="Floating label select example" name="role" required>
+                                        <option disabled {{ old('role') ? '' : 'selected' }}>Role</option>
+                                        <option value="manager" {{ old('role') == 'manager' ? 'selected' : '' }}>Manager</option>
+                                        <option value="teknisi" {{ old('role') == 'teknisi' ? 'selected' : '' }}>Teknisi</option>
+                                    </select>
+                                    <label for="role">Silahkan Pilih Role</label>
+                                    @error('role')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
 
 
                 </div>
@@ -172,13 +259,15 @@
                 </div>
             </div>
             </div><!-- End Basic Modal-->
+            <!-- Basic Modal -->
+
+
 
 
       </div>
     </section>
 
   </main><!-- End #main -->
-
 
 
   @include('admin.layout.footer-admin')

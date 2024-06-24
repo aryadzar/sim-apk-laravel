@@ -16,6 +16,10 @@ Route::group(['middleware' => ['auth', 'CheckRole:admin']], function(){
 
     Route::get('/admin/data-users', [AdminController::class, 'read'])->name('data_users');
 
+    Route::post('admin/data-users/tambah-user',[AdminController::class, 'tambah_user'] )->name('tambah_user');
+
+    Route::post('admin/data-users/delete-user/{id}',[AdminController::class, 'delete_user'] )->name('delete_user');
+
 });
 
 
