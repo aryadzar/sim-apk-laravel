@@ -26,9 +26,10 @@ class AdminController extends Controller
         $data_teknisi = DB::table('users')->select('*')->where('role' , '=', 'teknisi')->get();
         $data_manager = DB::table('users')->select('*')->where('role' , '=', 'manager')->get();
         $data_admin = DB::table('users')->select('*')->where('role' , '=', 'admin')->get();
+        $data_pesawat =  DB::table('pesawat')->select('*')->get();
 
         // dd($data_manager, $data_teknisi);
-        return view("admin.users-table", compact("data_teknisi", "data_manager", "data_admin"));
+        return view("admin.users-table", compact("data_teknisi", "data_manager", "data_admin", "data_pesawat"));
     }
 
     public function user_details($id){

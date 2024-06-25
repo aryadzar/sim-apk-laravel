@@ -1,5 +1,5 @@
     <!-- ======= Footer ======= -->
-    <footer id="footer" class="footer" style="margin-top: 500px">
+    <footer id="footer" class="footer">
         <div class="copyright">
           &copy; Copyright <strong><span>SIM-APK</span></strong>. All Rights Reserved
         </div>
