@@ -66,22 +66,22 @@
         </div>
         @endif
         <div class="col">
-            <div class="card">
-                <div class="card-body">
-                  <h5 class="card-title">Data Manager</h5>
+          <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Data Manager</h5>
 
-                  <!-- Table with hoverable rows -->
-                  <div class="table-responsive">
-                      <table class="table table-hover datatable">
+                <!-- Table with hoverable rows -->
+                <div class="table-responsive">
+                    <table class="table table-hover datatable">
                         <thead>
-                          <tr>
-                            <th scope="col">No</th>
-                            <th scope="col">NIP</th>
-                            <th scope="col">Foto</th>
-                            <th scope="col">Username</th>
-                            <th scope="col">Nama</th>
-                            <th scope="col">action</th>
-                          </tr>
+                            <tr>
+                                <th scope="col">No</th>
+                                <th scope="col">NIP</th>
+                                <th scope="col">Foto</th>
+                                <th scope="col">Username</th>
+                                <th scope="col">Nama</th>
+                                <th scope="col">action</th>
+                            </tr>
                         </thead>
                         <tbody>
                             @php
@@ -92,100 +92,198 @@
                                 <td>{{$no++}}</td>
                                 <td>{{$data->nip}}</td>
                                 <td>
-                                    <img src="{{asset("foto_user/".$data->foto)}}" alt="foto" width="50px" height="50px">
+                                    <img src="{{asset("foto_user/".$data->foto)}}" alt="foto" height="100px">
                                 </td>
                                 <td> {{$data->username}} </td>
                                 <td> {{$data->name}} </td>
                                 <td width="15%">
-                                    <a href="#" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail" ><i class=" ri-eye-line"></i></a>
-                                    <a href="#" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-confirm-delete="true" data-bs-placement="top" title="Delete" ><i class="bi bi-trash"></i></a>
+                                    <a href="{{route('user_details', $data->id)}}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail"><i class="ri-eye-line"></i></a>
+                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#delete_user{{$data->id}}" data-bs-placement="top" title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
                                 </td>
                             </tr>
 
+                            <!-- Modal -->
+                            <div class="modal fade" id="delete_user{{$data->id}}" tabindex="-1" aria-labelledby="deleteModalLabel{{$data->id}}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteModalLabel{{$data->id}}">Delete User</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to delete this user?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <form action="{{route('delete_user', $data->id)}}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Modal -->
+
                             @endforeach
                         </tbody>
-                        </table>
-                      <!-- End Table with hoverable rows -->
-
-                  </div>
+                    </table>
+                    <!-- End Table with hoverable rows -->
 
                 </div>
-              </div>
+
+            </div>
+        </div>
         </div>
         <div class="col">
             <div class="card">
                 <div class="card-body">
-                  <h5 class="card-title">Data Teknisi</h5>
+                    <h5 class="card-title">Data Teknisi</h5>
 
-                  <!-- Table with hoverable rows -->
-                  <div class="table-responsive">
-                      <table class="table table-hover datatable table-responsive">
-                        <thead>
-                          <tr>
-                            <th scope="col">No</th>
-                            <th scope="col">NIP</th>
-                            <th scope="col">Foto</th>
-                            <th scope="col">Username</th>
-                            <th scope="col">Nama</th>
-                            <th scope="col">action</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                            @php
-                                $no = 1;
-                            @endphp
-                            @foreach ($data_teknisi as $data)
-                            <tr>
-                                <td>{{$no++}}</td>
-                                <td>{{$data->nip}}</td>
-                                <td>
-                                    <img src="{{asset("foto_user/".$data->foto)}}" alt="foto"  height="100px">
-                                </td>
-                                <td> {{$data->username}} </td>
-                                <td> {{$data->name}} </td>
-                                <td width="15%">
-                                    <a href="#" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail" ><i class=" ri-eye-line"></i></a>
-                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" data-bs-target="#delete_user{{$data->id}}" data-bs-toggle="modal">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
+                    <!-- Table with hoverable rows -->
+                    <div class="table-responsive">
+                        <table class="table table-hover datatable table-responsive">
+                            <thead>
+                                <tr>
+                                    <th scope="col">No</th>
+                                    <th scope="col">NIP</th>
+                                    <th scope="col">Foto</th>
+                                    <th scope="col">Username</th>
+                                    <th scope="col">Nama</th>
+                                    <th scope="col">action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $no = 1;
+                                @endphp
+                                @foreach ($data_teknisi as $data)
+                                <tr>
+                                    <td>{{$no++}}</td>
+                                    <td>{{$data->nip}}</td>
+                                    <td>
+                                        <img src="{{asset("foto_user/".$data->foto)}}" alt="foto" height="100px">
+                                    </td>
+                                    <td> {{$data->username}} </td>
+                                    <td> {{$data->name}} </td>
+                                    <td width="15%">
+                                        <a href="{{route('user_details', $data->id)}}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail"><i class="ri-eye-line"></i></a>
+                                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#delete_user{{$data->id}}" data-bs-placement="top" title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
 
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="delete_user{{$data->id}}" data-bs-backdrop="static" tabindex="-1">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Hapus User</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form action="{{ route('delete_user', $data->id) }}" method="post">
-                                                        @csrf
-                                                        <input type="hidden" name="id" value="{{$data->id}}">
-                                                        <p>Apakah Anda yakin ingin menghapus pengguna ini?</p>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <!-- Modal -->
+                                <div class="modal fade" id="delete_user{{$data->id}}" tabindex="-1" aria-labelledby="deleteModalLabel{{$data->id}}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="deleteModalLabel{{$data->id}}">Delete User</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Are you sure you want to delete this user?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <form action="{{route('delete_user', $data->id)}}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
                                                     <button type="submit" class="btn btn-danger">Delete</button>
-                                                    </form>
-                                                </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- End Modal -->
-                                </td>
-                            </tr>
+                                </div>
+                                <!-- End Modal -->
 
-                            @endforeach
-                        </tbody>
+                                @endforeach
+                            </tbody>
                         </table>
 
-                  </div>
-                  <!-- End Table with hoverable rows -->
+                    </div>
+                    <!-- End Table with hoverable rows -->
 
                 </div>
-              </div>
+            </div>
         </div>
+        <div class="col">
+            <div class="card">
+              <div class="card-body">
+                  <h5 class="card-title">Data Admin</h5>
 
+                  <!-- Table with hoverable rows -->
+                  <div class="table-responsive">
+                      <table class="table table-hover datatable">
+                          <thead>
+                              <tr>
+                                  <th scope="col">No</th>
+                                  <th scope="col">NIP</th>
+                                  <th scope="col">Foto</th>
+                                  <th scope="col">Username</th>
+                                  <th scope="col">Nama</th>
+                                  <th scope="col">action</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              @php
+                                  $no = 1;
+                              @endphp
+                              @foreach ($data_admin as $data)
+                              <tr>
+                                  <td>{{$no++}}</td>
+                                  <td>{{$data->nip}}</td>
+                                  <td>
+                                      <img src="{{asset("foto_user/".$data->foto)}}" alt="foto" height="100px">
+                                  </td>
+                                  <td> {{$data->username}} </td>
+                                  <td> {{$data->name}} </td>
+                                  <td width="15%">
+                                      <a href="{{route('user_details', $data->id)}}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail"><i class="ri-eye-line"></i></a>
+                                      <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#delete_user{{$data->id}}" data-bs-placement="top" title="Delete">
+                                          <i class="bi bi-trash"></i>
+                                      </button>
+                                  </td>
+                              </tr>
+
+                              <!-- Modal -->
+                              <div class="modal fade" id="delete_user{{$data->id}}" tabindex="-1" aria-labelledby="deleteModalLabel{{$data->id}}" aria-hidden="true">
+                                  <div class="modal-dialog">
+                                      <div class="modal-content">
+                                          <div class="modal-header">
+                                              <h5 class="modal-title" id="deleteModalLabel{{$data->id}}">Delete User</h5>
+                                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                          </div>
+                                          <div class="modal-body">
+                                              Are you sure you want to delete this user?
+                                          </div>
+                                          <div class="modal-footer">
+                                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                              <form action="{{route('delete_user', $data->id)}}" method="POST">
+                                                  @csrf
+                                                  @method('DELETE')
+                                                  <button type="submit" class="btn btn-danger">Delete</button>
+                                              </form>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                              <!-- End Modal -->
+
+                              @endforeach
+                          </tbody>
+                      </table>
+                      <!-- End Table with hoverable rows -->
+
+                  </div>
+
+              </div>
+          </div>
+          </div>
             <!-- Basic Modal -->
 
             <div class="modal fade" id="tambah_user" data-bs-backdrop="static" tabindex="-1">
@@ -237,7 +335,7 @@
                                 </div>
                                 <div class="form-floating mb-3">
                                     <select class="form-select" id="role" aria-label="Floating label select example" name="role" required>
-                                        <option disabled {{ old('role') ? '' : 'selected' }}>Role</option>
+                                        <option  disabled {{ old('role') ? '' : 'selected' }}>Role</option>
                                         <option value="manager" {{ old('role') == 'manager' ? 'selected' : '' }}>Manager</option>
                                         <option value="teknisi" {{ old('role') == 'teknisi' ? 'selected' : '' }}>Teknisi</option>
                                     </select>

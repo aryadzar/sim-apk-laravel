@@ -13,7 +13,7 @@
 
       <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-
+      @include('sweetalert::alert')
   <!-- Vendor JS Files -->
   <script src="{{asset("assets/vendor/apexcharts/apexcharts.min.js")}}"></script>
   <script src="{{asset("assets/vendor/bootstrap/js/bootstrap.bundle.min.js")}}"></script>
@@ -24,6 +24,14 @@
   <script src="{{asset("assets/vendor/tinymce/tinymce.min.js")}}"></script>
   <script src="{{asset("assets/vendor/php-email-form/validate.js")}}"></script>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+});
+  </script>
 
 
   <!-- Template Main JS File -->
