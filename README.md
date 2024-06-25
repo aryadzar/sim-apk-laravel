@@ -9,5 +9,7 @@
 
 # Mini Project Upgrade SIM-APK from PHP Native
 
-Ini adalah project SIM-APK sebelumnya dengan upgrade menggunakan framework laravel, project sebelumnya [SIM-APK-OLD](https://github.com/aryadzar/sim-apk) untuk dokumentasi SKPL silahkan dilihat pada project tersebut
+- Ini adalah project SIM-APK sebelumnya dengan upgrade menggunakan framework laravel 
+- project sebelumnya [SIM-APK-OLD](https://github.com/aryadzar/sim-apk) 
+- untuk dokumentasi SKPL silahkan dilihat pada project tersebut
 
