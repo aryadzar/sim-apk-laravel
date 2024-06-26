@@ -16,9 +16,10 @@ class AdminController extends Controller
        $teknisi =  DB::table('users')->select('*')->where('role' , '=', 'teknisi')->count();
        $manager =  DB::table('users')->select('*')->where('role' , '=', 'manager')->count();
        $admin =  DB::table('users')->select('*')->where('role' , '=', 'admin')->count();
-       $pesawat =  DB::table('pesawat')->select('*')->count();
+       $pesawat =  DB::table('pesawats')->select('*')->count();
+       $data_pesawat =  DB::table('pesawats')->select('*')->get();
 
-       return view("admin.main", compact('teknisi', 'manager', 'pesawat', 'admin'));
+       return view("admin.main", compact('teknisi', 'manager', 'pesawat', 'admin', 'data_pesawat'));
 
 
     }
@@ -28,16 +29,130 @@ class AdminController extends Controller
         $data_teknisi = DB::table('users')->select('*')->where('role' , '=', 'teknisi')->get();
         $data_manager = DB::table('users')->select('*')->where('role' , '=', 'manager')->get();
         $data_admin = DB::table('users')->select('*')->where('role' , '=', 'admin')->get();
-        $data_pesawat =  DB::table('pesawat')->select('*')->get();
+        $data_pesawat =  DB::table('pesawats')->select('*')->get();
 
         // dd($data_manager, $data_teknisi);
         return view("admin.users-table", compact("data_teknisi", "data_manager", "data_admin", "data_pesawat"));
     }
 
     public function read_pesawat(){
-        $data_pesawat =  DB::table('pesawat')->select('*')->get();
+        $data_pesawat =  DB::table('pesawats')->select('*')->get();
 
         return view("admin.data-pesawat", compact('data_pesawat'));
+    }
+
+    public function update_foto_pesawat(Request $request,$id){
+            // Validasi file yang diunggah
+            $request->validate([
+                'profile_image' => 'image|mimes:jpeg,png,jpg,gif|max:5048', // max 2MB
+            ]);
+
+            $user = Pesawat::find($id);
+
+            if (!$user) {
+                return response()->json(['error' => 'User not found'], 404);
+            }
+
+            // Jika ada file baru diunggah
+            if ($request->hasFile('profile_image')) {
+                // Hapus foto lama jika ada
+
+                if ($user->foto_pesawat && file_exists("foto_user/".$user->foto_pesawat)) {
+                    // Storage::delete('foto_user/' . $user->foto);
+                    unlink('foto_pesawat/' . $user->foto);
+                }
+
+                // Simpan foto baru
+                $foto = $request->file('profile_image');
+                $fotoName = time() . '_' . $foto->getClientOriginalName();
+                // $foto->storeAs('foto_user', $fotoName);
+                $foto->move("foto_pesawat/", $fotoName);
+                // Update kolom foto di database
+                $user->foto_pesawat = $fotoName;
+                $user->save();
+
+                return response()->json(['path' => asset('foto_pesawat/' . $fotoName)], 200);
+            }
+
+            return response()->json(['error' => 'No file uploaded'], 400);
+    }
+
+    public function delete_foto_pesawat($id)
+    {
+        $user = Pesawat::find($id);
+
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        // Hapus foto dari storage jika ada
+        if (file_exists('foto_pesawat/' . $user->foto_pesawat)) {
+            unlink('foto_pesawat/' . $user->foto_pesawat);
+        }
+
+        // Kosongkan kolom foto di database
+        $user->foto_pesawat = '';
+        $user->save();
+
+        return response()->json(['message' => 'Profile image removed successfully'], 200);
+    }
+
+    public function tambah_pesawat(Request $request){
+        $request->validate([
+            'no_registrasi' => 'required|regex:/^[A-Za-z]+-\d+$/|unique:pesawats,no_registrasi',
+            'nama_maskapai' => 'required|string|max:255',
+            "kapasitas_penumpang" => "required|numeric",
+            "foto_pesawat" => "required|file|image|max:5120",
+            "jenis_pesawat" => 'required',
+            "tipe_pesawat" => 'required',
+            "jenis_body_pesawat" => 'required'
+        ], [
+            'no_registrasi.required' => 'Nomor registrasi wajib diisi.',
+            'no_registrasi.regex' => 'Format registrasi harus huruf strip angka, Contoh Format : H = huruf A = Angka (HHH....-AAAA....)',
+            'no_registrasi.unique' => 'Nomor registrasi ini sudah digunakan.',
+        ]);
+
+        $data = new Pesawat();
+
+        if($request->hasFile("foto_pesawat")){
+            $file = $request->file('foto_pesawat');
+
+            $uniqueName = time(). "-".uniqid()."-" . $file->getClientOriginalName();
+
+            $file->move('foto_pesawat/', $uniqueName);
+            $data->no_registrasi = $request->no_registrasi;
+            $data->nama_maskapai = $request->nama_maskapai;
+            $data->jenis_pesawat = $request->jenis_pesawat;
+            $data->kapasitas_penumpang = $request->kapasitas_penumpang;
+            $data->tipe_pesawat = $request->tipe_pesawat." ". $request->jenis_body_pesawat;
+            $data->foto_pesawat = $uniqueName;
+
+            $data->save();
+        }
+
+        Alert::success('Berhasil', 'Data User Berhasil Ditambahkan ');
+        return redirect()->route('data_pesawat')->with('success', "Data Pesawat Berhasil Ditambahkan");
+
+
+    }
+
+    public function detail_pesawat($id){
+        $target_pesawat = Pesawat::findOrFail($id);
+
+        return view('admin.details-pesawat', compact('target_pesawat'));
+    }
+    public function delete_pesawat($id){
+        $data = Pesawat::find($id);
+
+        $image_path = public_path('foto_pesawat/'.$data->foto_pesawat);
+
+        if(file_exists($image_path)){
+            unlink($image_path);
+
+        }
+
+        $data->delete();
+        return redirect()->route('data_pesawat');
     }
 
     public function change_password_user(Request $request){

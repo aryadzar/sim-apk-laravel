@@ -48,8 +48,8 @@
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="/admin">Home</a></li>
-          <li class="breadcrumb-item">Data Users</li>
-          <li class="breadcrumb-item active">Data Users</li>
+          <li class="breadcrumb-item">Data</li>
+          <li class="breadcrumb-item active">Data Pesawat</li>
 
         </ol>
       </nav>
@@ -59,7 +59,7 @@
       <div class="row">
         <div class="d-flex flex-row-reverse mb-5">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambah_user">
-                Tambah User
+                Tambah Pesawat
               </button>
         </div>
         @if ($errors->any())
@@ -76,7 +76,11 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Data Pesawat</h5>
-
+                    @if(session()->has('success'))
+                    <div class="alert alert-success" role="alert">
+                        {{ session('success') }}
+                    </div>
+                    @endif
                     <!-- Table with hoverable rows -->
                     <div class="table-responsive">
                         <table class="table table-hover datatable table-responsive">
@@ -101,22 +105,22 @@
                                     <td>{{$no++}}</td>
                                     <td>{{$data->no_registrasi}}</td>
                                     <td>
-                                        <img src="{{asset("foto_user/".$data->foto_pesawat)}}" alt="foto" height="100px">
+                                        <img src="{{asset("foto_pesawat/".$data->foto_pesawat)}}" alt="foto" height="100px">
                                     </td>
                                     <td> {{$data->nama_maskapai}} </td>
                                     <td> {{$data->tipe_pesawat}} </td>
                                     <td> {{$data->jenis_pesawat}} </td>
                                     <td> {{$data->kapasitas_penumpang}} </td>
                                     <td width="15%">
-                                        <a href="" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail"><i class="ri-eye-line"></i></a>
-                                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#delete_user{{$data->id}}" data-bs-placement="top" title="Delete">
+                                        <a href="{{route('detail_pesawat', $data->id)}}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail"><i class="ri-eye-line"></i></a>
+                                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#delete_pesawat{{$data->id}}" data-bs-placement="top" title="Delete">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </td>
                                 </tr>
 
                                 <!-- Modal -->
-                                <div class="modal fade" id="delete_user{{$data->id}}" tabindex="-1" aria-labelledby="deleteModalLabel{{$data->id}}" aria-hidden="true">
+                                <div class="modal fade" id="delete_pesawat{{$data->id}}" tabindex="-1" aria-labelledby="deleteModalLabel{{$data->id}}" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -124,11 +128,11 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                Are you sure you want to delete this user?
+                                                Mau Menghapus Data pesawat {{ $data->no_registrasi}}
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <form action="{{route('delete_user', $data->id)}}" method="POST">
+                                                <form action="{{route('delete_pesawat', $data->id)}}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger">Delete</button>
@@ -152,13 +156,103 @@
         <div class="col">
             <div class="card">
               <div class="card-body">
-                  <h5 class="card-title">Data Users Chart</h5>
+                  <h5 class="card-title">Data Pesawat Chart</h5>
 
                   <div class="table-responsive">
-                      <div id="dataChart" style="width: 600px; height: 400px; margin: auto;"></div>
-
+                        <div id="kapasitasPenumpangChart" style="width: 600px; height: 400px;"></div>
+                        <div id="jenisPesawatChart" style="width: 600px; height: 400px; margin-top:50px;"></div>
                   </div>
+                  <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                                var kapasitasPenumpangChartDom = document.getElementById('kapasitasPenumpangChart');
+                                var jenisPesawatChartDom = document.getElementById('jenisPesawatChart');
 
+                                var kapasitasPenumpangChart = echarts.init(kapasitasPenumpangChartDom);
+                                var jenisPesawatChart = echarts.init(jenisPesawatChartDom);
+
+                                var pesawatData = @json($data_pesawat); // Assuming you pass $pesawatData from your controller
+
+                                // Data preparation for Kapasitas Penumpang per Maskapai
+                                var kapasitasPenumpangData = pesawatData.map(function (item) {
+                                    return { name: item.nama_maskapai, value: item.kapasitas_penumpang };
+                                });
+
+                                // Data preparation for Jenis Pesawat
+                                var jenisPesawatCount = {};
+                                pesawatData.forEach(function (item) {
+                                    if (jenisPesawatCount[item.jenis_pesawat]) {
+                                        jenisPesawatCount[item.jenis_pesawat]++;
+                                    } else {
+                                        jenisPesawatCount[item.jenis_pesawat] = 1;
+                                    }
+                                });
+
+                                var jenisPesawatData = Object.keys(jenisPesawatCount).map(function (key) {
+                                    return { name: key, value: jenisPesawatCount[key] };
+                                });
+
+                                var kapasitasPenumpangOption = {
+                                    title: {
+                                        text: 'Kapasitas Penumpang per Maskapai',
+                                        left: 'center'
+                                    },
+                                    tooltip: {
+                                        trigger: 'item'
+                                    },
+                                    legend: {
+                                        orient: 'vertical',
+                                        left: 'left'
+                                    },
+                                    series: [
+                                        {
+                                            name: 'Kapasitas Penumpang',
+                                            type: 'pie',
+                                            radius: '50%',
+                                            data: kapasitasPenumpangData,
+                                            emphasis: {
+                                                itemStyle: {
+                                                    shadowBlur: 10,
+                                                    shadowOffsetX: 0,
+                                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                                }
+                                            }
+                                        }
+                                    ]
+                                };
+
+                                var jenisPesawatOption = {
+                                    title: {
+                                        text: 'Jumlah Jenis Pesawat',
+                                        left: 'center'
+                                    },
+                                    tooltip: {
+                                        trigger: 'item'
+                                    },
+                                    legend: {
+                                        orient: 'vertical',
+                                        left: 'left'
+                                    },
+                                    series: [
+                                        {
+                                            name: 'Jenis Pesawat',
+                                            type: 'pie',
+                                            radius: '50%',
+                                            data: jenisPesawatData,
+                                            emphasis: {
+                                                itemStyle: {
+                                                    shadowBlur: 10,
+                                                    shadowOffsetX: 0,
+                                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                                }
+                                            }
+                                        }
+                                    ]
+                                };
+
+                                kapasitasPenumpangOption && kapasitasPenumpangChart.setOption(kapasitasPenumpangOption);
+                                jenisPesawatOption && jenisPesawatChart.setOption(jenisPesawatOption);
+                            });
+                  </script>
               </div>
           </div>
           </div>
@@ -172,59 +266,71 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/admin/data-users/tambah-user" method="post" enctype="multipart/form-data">
+                    <form action="{{route('tambah_pesawat')}}" method="post" enctype="multipart/form-data">
                         @csrf
                         <div class="row mb-3">
                             <div class="col">
                                 <div class="form-floating mb-3">
-                                    <input type="number" name="nip" class="form-control @error('nip') is-invalid @enderror" id="nip" placeholder="NIP (Nomor Induk Pegawai)" value="{{ old('nip') }}" required>
-                                    <label for="nip">NIP (Nomor Induk Pegawai)</label>
-                                    @error('nip')
+                                    <input type="text" name="no_registrasi" class="form-control @error('no_registrasi') is-invalid @enderror" id="no_registrasi" placeholder="No Registrasi" value="{{ old('no_registrasi') }}" required>
+                                    <label for="no_registrasi">Nomor Registrasi </label>
+                                    @error('no_registrasi')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="name" placeholder="Nama User" value="{{ old('name') }}" required>
-                                    <label for="name">Nama User</label>
-                                    @error('name')
+                                    <input type="text" class="form-control @error('nama_maskapai') is-invalid @enderror" name="nama_maskapai" id="name" placeholder="Nama User" value="{{ old('nama_maskapai') }}" required>
+                                    <label for="nama_maskapai">Nama Maskapai</label>
+                                    @error('nama_maskapai')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="text" class="form-control @error('username') is-invalid @enderror" name="username" id="username" placeholder="Username" value="{{ old('username') }}" required>
-                                    <label for="username">Username</label>
-                                    @error('username')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="form-floating mb-3">
-                                    <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" id="password" placeholder="Password" required>
-                                    <label for="password">Password</label>
-                                    @error('password')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="form-floating mb-3">
-                                    <input type="file" class="form-control @error('foto') is-invalid @enderror" name="foto" id="foto" accept=".jpg, .jpeg, .png" placeholder="Pilih Foto Profile" required>
-                                    <label for="foto">Pilih Foto Profile</label>
-                                    @error('foto')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="form-floating mb-3">
-                                    <select class="form-select" id="role" aria-label="Floating label select example" name="role" required>
-                                        <option  disabled {{ old('role') ? '' : 'selected' }}>Role</option>
-                                        <option value="manager" {{ old('role') == 'manager' ? 'selected' : '' }}>Manager</option>
-                                        <option value="teknisi" {{ old('role') == 'teknisi' ? 'selected' : '' }}>Teknisi</option>
+                                    <select class="form-select" id="jenis_pesawat" name="jenis_pesawat" required>
+                                        <option disabled selected>Pilih Jenis Pesawat</option>
+                                        <option value="Komersial">Komersial</option>
+                                        <option value="Militer">Militer</option>
                                     </select>
-                                    <label for="role">Silahkan Pilih Role</label>
-                                    @error('role')
+                                    <label for="jenis_pesawat">Silahkan Pilih Jenis Pesawat</label>
+                                    @error('jenis_pesawat')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <select class="form-select" id="tipe_pesawat" name="tipe_pesawat" required>
+                                        <option disabled selected>Pilih Tipe Pesawat</option>
+                                    </select>
+                                    <label for="tipe_pesawat">Silahkan Pilih Tipe Pesawat</label>
+                                    @error('tipe_pesawat')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <select class="form-select" id="jenis_body_pesawat" name="jenis_body_pesawat" required>
+                                        <option disabled selected>Pilih Jenis Body Pesawat</option>
+                                    </select>
+                                    <label for="jenis_body_pesawat">Silahkan Pilih Jenis Body Pesawat</label>
+                                    @error('jenis_body_pesawat')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
+                            <div class="form-floating mb-3">
+                                <input type="number" name="kapasitas_penumpang" class="form-control @error('kapasitas_penumpang') is-invalid @enderror" id="kapasitas_penumpang" placeholder="No Registrasi" value="{{ old('kapasitas_penumpang') }}" required>
+                                <label for="kapasitas_penumpang">Kapasitas Penumpang</label>
+                                @error('kapasitas_penumpang')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="file" class="form-control @error('foto_pesawat') is-invalid @enderror" name="foto_pesawat" id="foto_pesawat" accept=".jpg, .jpeg, .png" placeholder="Pilih Foto Pesawat" required>
+                                <label for="foto_pesawat">Pilih Foto Pesawat</label>
+                                @error('foto_pesawat')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
-
 
                 </div>
                 <div class="modal-footer">
@@ -245,7 +351,85 @@
 
   </main><!-- End #main -->
 
+  <script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Data tipe pesawat berdasarkan jenis pesawat
+    const tipePesawatData = {
+        Komersial: [
+            { value: 'Airbus', label: 'Airbus' },
+            { value: 'Boeing', label: 'Boeing' }
+        ],
+        Militer: [
+            { value: 'F16', label: 'F16' },
+            { value: 'Sukhoi', label: 'Sukhoi' }
+        ]
+    };
 
+    // Data jenis body pesawat berdasarkan tipe pesawat
+    const jenisBodyPesawatData = {
+        Airbus: [
+            { value: 'A220', label: 'A220' },
+            { value: 'A320', label: 'A320' },
+            { value: 'A380', label: 'A380' },
+            { value: 'A350', label: 'A350' },
+        ],
+        Boeing: [
+            { value: '737', label: '737' },
+            { value: '747', label: '747' },
+            { value: '767', label: '767' },
+            { value: '777', label: '777' },
+        ],
+        F16: [
+            { value: 'Block 50', label: 'Block 50' },
+            { value: 'Block 60', label: 'Block 60' }
+        ],
+        Sukhoi: [
+            { value: 'Su-27', label: 'Su-27' },
+            { value: 'Su-30', label: 'Su-30' }
+        ]
+    };
+
+    // Referensi ke elemen HTML
+    const jenisPesawatSelect = document.getElementById('jenis_pesawat');
+    const tipePesawatSelect = document.getElementById('tipe_pesawat');
+    const jenisBodyPesawatSelect = document.getElementById('jenis_body_pesawat');
+
+    // Event listener untuk perubahan pada dropdown jenis pesawat
+    jenisPesawatSelect.addEventListener('change', function () {
+        const jenisPesawat = this.value;
+        const tipePesawatOptions = tipePesawatData[jenisPesawat] || [];
+
+        // Hapus opsi sebelumnya
+        tipePesawatSelect.innerHTML = '<option disabled selected>Pilih Tipe Pesawat</option>';
+        jenisBodyPesawatSelect.innerHTML = '<option disabled selected>Pilih Jenis Body Pesawat</option>';
+
+        // Tambah opsi baru
+        tipePesawatOptions.forEach(function (tipe) {
+            const option = document.createElement('option');
+            option.value = tipe.value;
+            option.textContent = tipe.label;
+            tipePesawatSelect.appendChild(option);
+        });
+    });
+
+    // Event listener untuk perubahan pada dropdown tipe pesawat
+    tipePesawatSelect.addEventListener('change', function () {
+        const tipePesawat = this.value;
+        const jenisBodyPesawatOptions = jenisBodyPesawatData[tipePesawat] || [];
+
+        // Hapus opsi sebelumnya
+        jenisBodyPesawatSelect.innerHTML = '<option disabled selected>Pilih Jenis Body Pesawat</option>';
+
+        // Tambah opsi baru
+        jenisBodyPesawatOptions.forEach(function (jenis) {
+            const option = document.createElement('option');
+            option.value = jenis.value;
+            option.textContent = jenis.label;
+            jenisBodyPesawatSelect.appendChild(option);
+        });
+    });
+});
+  </script>
   @include('admin.layout.footer-admin')
 
 

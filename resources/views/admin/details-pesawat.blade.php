@@ -18,7 +18,7 @@
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="/admin">Home</a></li>
           <li class="breadcrumb-item">Data Users</li>
-          <li class="breadcrumb-item active">User Details : {{ $target_user->name}}</li>
+          <li class="breadcrumb-item active">Detail Pesawat : {{ $target_pesawat->nama_maskapai}}</li>
 
         </ol>
       </nav>
@@ -31,9 +31,8 @@
             <div class="card">
               <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
 
-                <img src="{{asset('foto_user/'. $target_user->foto)}}" alt="Profile" id="currentProfileImage1" class="rounded-circle">
-                <h2>{{ $target_user->name }}</h2>
-                <h3 class="mt-3">{{ucfirst($target_user->role)}}</h3>
+                <img src="{{asset('foto_pesawat/'. $target_pesawat->foto_pesawat)}}" alt="Profile" id="currentProfileImage1" class="rounded-circle">
+                <h2>{{ $target_pesawat->nama_maskapai }}</h2>
               </div>
             </div>
 
@@ -51,14 +50,9 @@
                   </li>
 
                   <li class="nav-item">
-                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Edit Profile</button>
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Edit Pesawat</button>
                   </li>
 
-
-
-                  <li class="nav-item">
-                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change Password</button>
-                  </li>
 
                 </ul>
                 <div class="tab-content pt-2">
@@ -82,24 +76,28 @@
                     <h5 class="card-title">Profile Details</h5>
 
                     <div class="row">
-                      <div class="col-lg-3 col-md-4 label ">NIP (Nomor Induk Pekerjaan  )</div>
-                      <div class="col-lg-9 col-md-8">{{$target_user->nip}}</div>
+                      <div class="col-lg-3 col-md-4 label ">No Registrasi Pesawat </div>
+                      <div class="col-lg-9 col-md-8">{{$target_pesawat->no_registrasi}}</div>
                     </div>
 
 
                     <div class="row">
-                      <div class="col-lg-3 col-md-4 label ">Nama Lengkap</div>
-                      <div class="col-lg-9 col-md-8">{{$target_user->name}}</div>
+                      <div class="col-lg-3 col-md-4 label ">Nama Masakapai</div>
+                      <div class="col-lg-9 col-md-8">{{$target_pesawat->nama_maskapai}}</div>
                     </div>
                     <div class="row">
-                      <div class="col-lg-3 col-md-4 label ">Username</div>
-                      <div class="col-lg-9 col-md-8">{{$target_user->username}}</div>
+                      <div class="col-lg-3 col-md-4 label ">Tipe Pesawat</div>
+                      <div class="col-lg-9 col-md-8">{{$target_pesawat->tipe_pesawat}}</div>
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-3 col-md-4 label ">Jenis Pesawat</div>
+                      <div class="col-lg-9 col-md-8">{{$target_pesawat->jenis_pesawat}}</div>
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-3 col-md-4 label ">Kapasitas Penumpang</div>
+                      <div class="col-lg-9 col-md-8">{{$target_pesawat->kapasitas_penumpang}}</div>
                     </div>
 
-                    <div class="row">
-                      <div class="col-lg-3 col-md-4 label">Role SIM-APK</div>
-                      <div class="col-lg-9 col-md-8">{{  ucfirst($target_user->role)  }}</div>
-                    </div>
 
 
                     <div class="row">
@@ -107,12 +105,12 @@
                         @php
                             setLocale(LC_TIME,'id');
                       @endphp
-                      <div class="col-lg-9 col-md-8">{{$target_user->created_at->diffForHumans()}}</div>
+                      <div class="col-lg-9 col-md-8">{{$target_pesawat->created_at->diffForHumans()}}</div>
                     </div>
 
                     <div class="row">
                       <div class="col-lg-3 col-md-4 label">Update Terakhir</div>
-                      <div class="col-lg-9 col-md-8">{{  $target_user->updated_at->diffForHumans()  }}</div>
+                      <div class="col-lg-9 col-md-8">{{  $target_pesawat->updated_at->diffForHumans()  }}</div>
                     </div>
 
                   </div>
@@ -124,7 +122,7 @@
                         <div class="row mb-3">
                             <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Foto Profil</label>
                             <div class="col-md-8 col-lg-9">
-                                <img src="{{ asset('foto_user/'.$target_user->foto) }}" alt="Profile" id="currentProfileImage2">
+                                <img src="{{ asset('foto_pesawat/'.$target_pesawat->foto_pesawat) }}" alt="Profile" id="currentProfileImage2">
                                 <div class="pt-2">
                                     <input type="file" name="profile_image" id="profileImage" style="display: none;" accept=".jpg, .jpeg, .png">
                                     <label for="profileImage" class="btn btn-primary btn-sm" title="Upload new profile image" id="uploadProfileImage">
@@ -140,7 +138,7 @@
 
 
 
-                    <form action="{{route('edit_details_user', $target_user->id)}}" method="post">
+                    {{-- <form action="{{route('edit_details_user', $target_user->id)}}" method="post">
                         @csrf
                         <div class="row mb-3">
                           <label for="nip" class="col-md-4 col-lg-3 col-form-label">NIP</label>
@@ -179,33 +177,11 @@
                           <button type="submit" class="btn btn-primary">Save Changes</button>
                         </div>
 
-                    </form>
+                    </form> --}}
 
                   </div>
 
 
-
-                  <div class="tab-pane fade pt-3" id="profile-change-password">
-                    <!-- Change Password Form -->
-                    <form id="changePasswordForm" action="{{ route('change_password_user') }}" method="POST">
-                        @csrf
-
-                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                            <h4 class="alert-heading">Password Default</h4>
-                            <p>Password akan diganti menjadi password default perusahaan. Silahkan ingatkan user untuk mengganti password.</p>
-                            <hr>
-                            <p class="mb-0">Untuk Admin Tercinta</p>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-
-                        <input type="hidden" name="id" value="{{ $target_user->id }}">
-
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary">Change Password</button>
-                        </div>
-                    </form><!-- End Change Password Form -->
-
-                  </div>
 
                 </div><!-- End Bordered Tabs -->
 
@@ -233,7 +209,7 @@
             formData.append('_token', '{{ csrf_token() }}'); // Sertakan token CSRF
 
             $.ajax({
-                url: "{{ route('update_profile', ['id' => $target_user->id]) }}",
+                url: "{{ route('update_foto_pesawat', ['id' => $target_pesawat->id]) }}",
                 method: 'POST',
                 data: formData,
                 contentType: false,
@@ -255,7 +231,7 @@
               e.preventDefault();
               if (confirm('Are you sure you want to remove your profile image?')) {
                   $.ajax({
-                      url: "{{ route('remove_profile_image', ['id' => $target_user->id]) }}",
+                      url: "{{ route('delete_foto_pesawat', ['id' => $target_pesawat->id]) }}",
                       method: 'POST',
                       data: {_method: 'DELETE', _token: "{{ csrf_token() }}"},
                       success: function(response) {
