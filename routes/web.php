@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\User;
+use Illuminate\Http\Request;
 use App\Http\Middleware\Admin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +18,8 @@ Route::group(['middleware' => ['auth', 'CheckRole:admin']], function(){
 
     Route::get('/admin/data-users', [AdminController::class, 'read'])->name('data_users');
 
+    Route::get('/admin/data-pesawat', [AdminController::class, 'read_pesawat'])->name('data_pesawat');
+
     Route::post('admin/data-users/tambah-user',[AdminController::class, 'tambah_user'] )->name('tambah_user');
 
     Route::delete('admin/data-users/delete-user/{id}',[AdminController::class, 'delete_user'] )->name('delete_user');
@@ -27,9 +31,44 @@ Route::group(['middleware' => ['auth', 'CheckRole:admin']], function(){
     Route::post('admin/data-users/user-details/update-img/{id}', [AdminController::class, 'updateProfile'])->name('update_profile');
 
     Route::delete('admin/data-users/user-details/delete-img/{id}', [AdminController::class, 'removeProfileImage'])->name('remove_profile_image');
+    Route::post('admin/data-users/user-details/change-password', [AdminController::class, 'change_password_user'])->name('change_password_user');
 });
 
+Route::group(['middleware' => ['auth', 'CheckRole:admin,teknisi,manager']], function(){
 
+    Route::get('/user/user-details/{id}', function($id){
+        $target_user = User::find($id);
+        $current_user = Auth::user();
+
+        if (!$target_user) {
+            return redirect()->route('profile_user', $current_user->id)->with('error', 'User tidak ditemukan.');
+        }
+
+        // Periksa apakah pengguna yang masuk adalah pengguna yang diminta atau admin
+        if ($current_user->id !== $target_user->id) {
+            return redirect()->route('profile_user', $current_user->id)->with('error', 'Anda tidak diizinkan untuk melihat profil ini.');
+        }
+
+        return view('user-details', compact('target_user'));
+    } )->name('profile_user');
+
+    Route::post('/user/user-details/change-profile/{id}', function (Request $request, $id){
+            // Temukan pengguna berdasarkan ID
+            $data = User::find($id);
+
+            // Validasi input dengan pengecualian ID pengguna yang sedang diedit
+            $request->validate([
+                'name' => 'required|string|max:255'
+            ]);
+
+
+            // Update data pengguna
+            $data->update($request->only( 'name'));
+
+            // Redirect ke halaman detail pengguna
+            return redirect()->route('profile_user', $id)->with('success', 'User details updated successfully.');
+    })->name('change_profile');
+});
 
 
 

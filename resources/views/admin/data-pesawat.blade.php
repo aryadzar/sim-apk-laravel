@@ -71,83 +71,11 @@
             </ul>
         </div>
         @endif
-        <div class="col">
-          <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Data Manager</h5>
 
-                <!-- Table with hoverable rows -->
-                <div class="table-responsive">
-                    <table class="table table-hover datatable">
-                        <thead>
-                            <tr>
-                                <th scope="col">No</th>
-                                <th scope="col">NIP</th>
-                                <th scope="col">Foto</th>
-                                <th scope="col">Username</th>
-                                <th scope="col">Nama</th>
-                                <th scope="col">action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @php
-                                $no = 1;
-                            @endphp
-                            @foreach ($data_manager as $data)
-                            <tr>
-                                <td>{{$no++}}</td>
-                                <td>{{$data->nip}}</td>
-                                <td>
-                                    <img src="{{asset("foto_user/".$data->foto)}}" alt="foto" height="100px">
-                                </td>
-                                <td> {{$data->username}} </td>
-                                <td> {{$data->name}} </td>
-                                <td width="15%">
-                                    <a href="{{route('user_details', $data->id)}}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail"><i class="ri-eye-line"></i></a>
-                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#delete_user{{$data->id}}" data-bs-placement="top" title="Delete">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-
-                            <!-- Modal -->
-                            <div class="modal fade" id="delete_user{{$data->id}}" tabindex="-1" aria-labelledby="deleteModalLabel{{$data->id}}" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="deleteModalLabel{{$data->id}}">Delete User</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            Are you sure you want to delete this user?
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            <form action="{{route('delete_user', $data->id)}}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger">Delete</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Modal -->
-
-                            @endforeach
-                        </tbody>
-                    </table>
-                    <!-- End Table with hoverable rows -->
-
-                </div>
-
-            </div>
-        </div>
-        </div>
         <div class="col">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Data Teknisi</h5>
+                    <h5 class="card-title">Data Pesawat</h5>
 
                     <!-- Table with hoverable rows -->
                     <div class="table-responsive">
@@ -155,28 +83,32 @@
                             <thead>
                                 <tr>
                                     <th scope="col">No</th>
-                                    <th scope="col">NIP</th>
-                                    <th scope="col">Foto</th>
-                                    <th scope="col">Username</th>
-                                    <th scope="col">Nama</th>
-                                    <th scope="col">action</th>
+                                    <th scope="col">No Registrasi</th>
+                                    <th scope="col">Foto Pesawat</th>
+                                    <th scope="col">Nama Maskapai</th>
+                                    <th scope="col">Tipe Pesawat</th>
+                                    <th scope="col">Jenis Pesawat</th>
+                                    <th scope="col">Kapasitas Penumpang</th>
+                                    <th scope="col">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @php
                                     $no = 1;
                                 @endphp
-                                @foreach ($data_teknisi as $data)
+                                @foreach ($data_pesawat as $data)
                                 <tr>
                                     <td>{{$no++}}</td>
-                                    <td>{{$data->nip}}</td>
+                                    <td>{{$data->no_registrasi}}</td>
                                     <td>
-                                        <img src="{{asset("foto_user/".$data->foto)}}" alt="foto" height="100px">
+                                        <img src="{{asset("foto_user/".$data->foto_pesawat)}}" alt="foto" height="100px">
                                     </td>
-                                    <td> {{$data->username}} </td>
-                                    <td> {{$data->name}} </td>
+                                    <td> {{$data->nama_maskapai}} </td>
+                                    <td> {{$data->tipe_pesawat}} </td>
+                                    <td> {{$data->jenis_pesawat}} </td>
+                                    <td> {{$data->kapasitas_penumpang}} </td>
                                     <td width="15%">
-                                        <a href="{{route('user_details', $data->id)}}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail"><i class="ri-eye-line"></i></a>
+                                        <a href="" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail"><i class="ri-eye-line"></i></a>
                                         <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#delete_user{{$data->id}}" data-bs-placement="top" title="Delete">
                                             <i class="bi bi-trash"></i>
                                         </button>
@@ -227,48 +159,6 @@
 
                   </div>
 
-                  <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        var chartDom = document.getElementById('dataChart');
-                        var myChart = echarts.init(chartDom);
-
-                        var option = {
-                            title: {
-                                text: 'Data Users Chart',
-                                left: 'center'
-                            },
-                            tooltip: {
-                                trigger: 'item'
-                            },
-                            legend: {
-                                orient: 'vertical',
-                                left: 'left',
-                            },
-                            series: [
-                                {
-                                    name: 'Users',
-                                    type: 'pie',
-                                    radius: '50%',
-                                    data: [
-                                        { value: {{ count($data_manager) }}, name: 'Managers' },
-                                        { value: {{ count($data_teknisi) }}, name: 'Teknisi' },
-                                        { value: {{ count($data_admin) }}, name: 'Admin'},
-                                        { value: {{ count($data_pesawat) }}, name: 'Pesawat'},
-                                    ],
-                                    emphasis: {
-                                        itemStyle: {
-                                            shadowBlur: 10,
-                                            shadowOffsetX: 0,
-                                            shadowColor: 'rgba(0, 0, 0, 0.5)'
-                                        }
-                                    }
-                                }
-                            ]
-                        };
-
-                        option && myChart.setOption(option);
-                    });
-                </script>
               </div>
           </div>
           </div>

@@ -6,9 +6,9 @@
 
   @include('admin.layout.nav-admin')
 
-
+ @include('admin.layout.sidebar-admin')
 <!-- ======= Sidebar ======= -->
-<aside id="sidebar" class="sidebar">
+{{-- <aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
 
@@ -31,8 +31,13 @@
           </li>
         </ul>
       </li><!-- End Components Nav -->
-
-    </aside><!-- End Sidebar-->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="/admin/">
+            <i class="bi bi-airplane"></i>
+          <span>Data Pesawat</span>
+        </a>
+      </li><!-- End Dashboard Nav -->
+    </aside><!-- End Sidebar--> --}}
 
   <main id="main" class="main">
 
@@ -121,7 +126,61 @@
               </div>
 
             </div><!-- End Customers Card -->
+            <div class="col">
+                <div class="card">
+                  <div class="card-body">
+                      <h5 class="card-title">Data Users Chart</h5>
 
+                      <div class="table-responsive">
+                          <div id="dataChart" style="width: 600px; height: 400px; margin: auto;"></div>
+
+                      </div>
+
+                      <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            var chartDom = document.getElementById('dataChart');
+                            var myChart = echarts.init(chartDom);
+
+                            var option = {
+                                title: {
+                                    text: 'Data Users Chart',
+                                    left: 'center'
+                                },
+                                tooltip: {
+                                    trigger: 'item'
+                                },
+                                legend: {
+                                    orient: 'vertical',
+                                    left: 'left',
+                                },
+                                series: [
+                                    {
+                                        name: 'Users',
+                                        type: 'pie',
+                                        radius: '50%',
+                                        data: [
+                                            { value: {{ $manager }}, name: 'Managers' },
+                                            { value: {{ $teknisi }}, name: 'Teknisi' },
+                                            { value: {{ $admin }}, name: 'Admin'},
+                                            { value: {{ $pesawat }}, name: 'Pesawat'},
+                                        ],
+                                        emphasis: {
+                                            itemStyle: {
+                                                shadowBlur: 10,
+                                                shadowOffsetX: 0,
+                                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                            }
+                                        }
+                                    }
+                                ]
+                            };
+
+                            option && myChart.setOption(option);
+                        });
+                    </script>
+                  </div>
+              </div>
+              </div>
 
       </div>
     </section>

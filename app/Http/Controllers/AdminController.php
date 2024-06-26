@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pesawat;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -14,9 +15,10 @@ class AdminController extends Controller
     public function dashboard(){
        $teknisi =  DB::table('users')->select('*')->where('role' , '=', 'teknisi')->count();
        $manager =  DB::table('users')->select('*')->where('role' , '=', 'manager')->count();
+       $admin =  DB::table('users')->select('*')->where('role' , '=', 'admin')->count();
        $pesawat =  DB::table('pesawat')->select('*')->count();
 
-       return view("admin.main", compact('teknisi', 'manager', 'pesawat'));
+       return view("admin.main", compact('teknisi', 'manager', 'pesawat', 'admin'));
 
 
     }
@@ -32,6 +34,26 @@ class AdminController extends Controller
         return view("admin.users-table", compact("data_teknisi", "data_manager", "data_admin", "data_pesawat"));
     }
 
+    public function read_pesawat(){
+        $data_pesawat =  DB::table('pesawat')->select('*')->get();
+
+        return view("admin.data-pesawat", compact('data_pesawat'));
+    }
+
+    public function change_password_user(Request $request){
+        $data = User::find($request->id);
+
+
+        $defaultpassword = "password";
+
+        $data->password = bcrypt($defaultpassword);
+
+        $data->save();
+
+        return redirect()->route('user_details', $request->id)->with('success', 'Password berhasil diganti default');
+
+
+    }
     public function user_details($id){
         $target_user  = User::findOrFail($id);
 

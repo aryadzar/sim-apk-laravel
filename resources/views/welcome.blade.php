@@ -52,7 +52,7 @@
         </nav>
 
         <!--hero header-->
-        <section class="bg-hero py-7 py-lg-0" id="home" style="background-image: url(img/back.png)">
+        <section class="bg-hero py-7 py-lg-0" id="home" style="background-image: url(img/intro-back.gif)">
             <div class="container">
                 <div class="row vh-md-100">
                     <div class="col-md-8 mx-auto my-auto text-center">
@@ -166,7 +166,7 @@
         </section>
 
         <!--call to action-->
-        <section class="bg-hero py-6" style="background-image: url(img/Tech.jpeg)">
+        <section class="bg-hero py-6" style="background-image: url(img/pekerja.gif)">
             <div class="container">
                 <div class="row">
                     <div class="col-md-8 bg-transparent-alt">
@@ -428,7 +428,7 @@
         <script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.5.0/feather.min.js"></script>
         <script src=" {{asset("js/scripts.js")}}"></script>
 
-        <!--Modals-->
+        <!-- Modals -->
         <div class="modal fade" id="videoModal" tabindex="-1" role="dialog" aria-labelledby="videoModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
@@ -440,13 +440,13 @@
                     </div>
                     <div class="modal-body p-2">
                         <div class="embed-responsive embed-responsive-16by9">
-                            <iframe class="embed-responsive-item allowfullscreen" src="https://www.youtube.com/embed/MGsalg2f9js?rel=0&amp;controls=0&amp;showinfo=0"
-                                    allowfullscreen="" frameborder="0" height="415" width="100%"></iframe>
+                            <iframe id="videoIframe" width="560" height="315" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
 
         <!--login modal-->
         <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
@@ -510,6 +510,24 @@
                 </div>
             </div>
         </div>
+
+
+
+        <script>
+            $(document).ready(function () {
+                var videoModal = $('#videoModal');
+                var videoIframe = $('#videoIframe');
+                var videoSrc = "https://www.youtube.com/embed/Bacn8rOX_0E?si=mvdh5vcKL1iBNy2l";
+
+                videoModal.on('show.bs.modal', function () {
+                    videoIframe.attr('src', videoSrc + "&autoplay=1");
+                });
+
+                videoModal.on('hidden.bs.modal', function () {
+                    videoIframe.attr('src', '');
+                });
+            });
+        </script>
 
 
     </body>
