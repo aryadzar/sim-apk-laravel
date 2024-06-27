@@ -14,7 +14,5 @@
 - untuk dokumentasi SKPL silahkan dilihat pada project tersebut
 - Refrensi Template [Template Nice Admin](https://bootstrapmade.com/demo/templates/NiceAdmin/index.html)
 
-<iframe src="https://bootstrapmade.com/demo/templates/NiceAdmin/index.html"> 
 
-</iframe>
 
