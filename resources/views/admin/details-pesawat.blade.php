@@ -17,7 +17,6 @@
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="/admin">Home</a></li>
-          <li class="breadcrumb-item">Data Users</li>
           <li class="breadcrumb-item active">Detail Pesawat : {{ $target_pesawat->nama_maskapai}}</li>
 
         </ol>
@@ -31,7 +30,7 @@
             <div class="card">
               <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
 
-                <img src="{{asset('foto_pesawat/'. $target_pesawat->foto_pesawat)}}" alt="Profile" id="currentProfileImage1" class="rounded-circle">
+                <img src="{{asset('foto_pesawat/'. $target_pesawat->foto_pesawat)}}" alt="Profile" id="currentProfileImage1">
                 <h2>{{ $target_pesawat->nama_maskapai }}</h2>
               </div>
             </div>
@@ -86,12 +85,12 @@
                       <div class="col-lg-9 col-md-8">{{$target_pesawat->nama_maskapai}}</div>
                     </div>
                     <div class="row">
-                      <div class="col-lg-3 col-md-4 label ">Tipe Pesawat</div>
-                      <div class="col-lg-9 col-md-8">{{$target_pesawat->tipe_pesawat}}</div>
-                    </div>
-                    <div class="row">
                       <div class="col-lg-3 col-md-4 label ">Jenis Pesawat</div>
                       <div class="col-lg-9 col-md-8">{{$target_pesawat->jenis_pesawat}}</div>
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-3 col-md-4 label ">Tipe Pesawat</div>
+                      <div class="col-lg-9 col-md-8">{{$target_pesawat->tipe_pesawat}}</div>
                     </div>
                     <div class="row">
                       <div class="col-lg-3 col-md-4 label ">Kapasitas Penumpang</div>
@@ -136,58 +135,62 @@
                         </div>
                     </form>
 
-
-
-                    {{-- <form action="{{route('edit_details_user', $target_user->id)}}" method="post">
+                    <form action="{{ route('edit_detail_pesawat', $target_pesawat->id) }}" method="post">
                         @csrf
                         <div class="row mb-3">
-                          <label for="nip" class="col-md-4 col-lg-3 col-form-label">NIP</label>
-                          <div class="col-md-8 col-lg-9">
-                            <input name="nip" type="text" class="form-control" id="nip" value="{{$target_user->nip}}">
-                          </div>
+                            <label for="nip" class="col-md-4 col-lg-3 col-form-label">No Registrasi Pesawat</label>
+                            <div class="col-md-8 col-lg-9">
+                                <input name="no_registrasi" type="text" class="form-control" id="nip" value="{{ $target_pesawat->no_registrasi }}">
+                            </div>
                         </div>
 
                         <div class="row mb-3">
-                          <label for="nama" class="col-md-4 col-lg-3 col-form-label">Nama Lengkap</label>
-                          <div class="col-md-8 col-lg-9">
-                            <input name="name" type="text" class="form-control" id="nama" value="{{$target_user->name}}">
-                          </div>
+                            <label for="nama" class="col-md-4 col-lg-3 col-form-label">Nama Maskapai</label>
+                            <div class="col-md-8 col-lg-9">
+                                <input name="nama_maskapai" type="text" class="form-control" id="nama" value="{{ $target_pesawat->nama_maskapai }}">
+                            </div>
                         </div>
 
                         <div class="row mb-3">
-                          <label for="nama" class="col-md-4 col-lg-3 col-form-label">Username</label>
-                          <div class="col-md-8 col-lg-9">
-                            <input name="username" type="text" class="form-control" id="nama" value="{{$target_user->username}}">
-                          </div>
+                            <label for="role" class="col-md-4 col-lg-3 col-form-label">Jenis Pesawat</label>
+                            <div class="col-md-8 col-lg-9">
+                                <select class="form-select" id="jenis_pesawat" name="jenis_pesawat" required>
+                                    <option disabled {{ $target_pesawat->jenis_pesawat ? '' : 'selected' }}>Pilih Jenis Pesawat</option>
+                                    <option value="Boeing" {{ $target_pesawat->jenis_pesawat == 'Boeing' ? 'selected' : '' }}>Boeing</option>
+                                    <option value="Airbus" {{ $target_pesawat->jenis_pesawat == 'Airbus' ? 'selected' : '' }}>Airbus</option>
+                                </select>
+                                @error('jenis_pesawat')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
 
                         <div class="row mb-3">
-                          <label for="role" class="col-md-4 col-lg-3 col-form-label">Role User</label>
-                          <div class="col-md-8 col-lg-9">
-                              <select class="form-select" id="role" aria-label="Floating label select example" name="role" required>
-                                  <option disabled >Role</option>
-                                  <option value="manager" {{ $target_user->role == 'manager' ? 'selected' : '' }}>Manager</option>
-                                  <option value="teknisi" {{ $target_user->role == 'teknisi' ? 'selected' : '' }}>Teknisi</option>
-                              </select>
-                          </div>
+                            <label for="role" class="col-md-4 col-lg-3 col-form-label">Tipe Pesawat</label>
+                            <div class="col-md-8 col-lg-9">
+                                <select class="form-select" id="tipe_pesawat" name="tipe_pesawat" required>
+                                    <option disabled {{ old('tipe_pesawat') ? '' : 'selected' }}>Pilih Tipe Pesawat</option>
+                                    <!-- Options will be populated by AJAX -->
+                                </select>
+                                @error('tipe_pesawat')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
 
+                        <div class="row mb-3">
+                            <label for="kapasitas_penumpang" class="col-md-4 col-lg-3 col-form-label">Kapasitas Penumpang</label>
+                            <div class="col-md-8 col-lg-9">
+                                <input name="kapasitas_penumpang" type="text" class="form-control" id="kapasitas_penumpang" value="{{ $target_pesawat->kapasitas_penumpang }}">
+                            </div>
+                        </div>
 
                         <div class="text-center">
-                          <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
                         </div>
+                    </form>
 
-                    </form> --}}
-
-                  </div>
-
-
-
-                </div><!-- End Bordered Tabs -->
-
-              </div>
-            </div>
-
+                </div>
           </div>
         </div>
       </section>
@@ -231,7 +234,7 @@
               e.preventDefault();
               if (confirm('Are you sure you want to remove your profile image?')) {
                   $.ajax({
-                      url: "{{ route('delete_foto_pesawat', ['id' => $target_pesawat->id]) }}",
+                      url: "{{ route('delete_foto_pesawat', ['id' => $target_pesawat->id]) }} ",
                       method: 'POST',
                       data: {_method: 'DELETE', _token: "{{ csrf_token() }}"},
                       success: function(response) {
@@ -248,6 +251,41 @@
           });
       });
   </script>
+<script>
+    $(document).ready(function() {
+        var tipePesawatData = {
+            'Boeing': ['737', '747', '767', '777', '787'],
+            'Airbus': ['A320', 'A330', 'A340', 'A350', 'A380']
+        };
+
+        var oldJenisPesawat = "{{ $target_pesawat->jenis_pesawat }}";
+        var oldTipePesawat = "{{ $target_pesawat->tipe_pesawat }}";
+
+        function populateTipePesawat(jenisPesawat, selectedTipe) {
+            var tipePesawatSelect = $('#tipe_pesawat');
+            tipePesawatSelect.empty();
+            tipePesawatSelect.append('<option disabled>Pilih Tipe Pesawat</option>');
+            if (jenisPesawat in tipePesawatData) {
+                tipePesawatData[jenisPesawat].forEach(function(tipe) {
+                    tipePesawatSelect.append('<option value="' + tipe + '">' + tipe + '</option>');
+                });
+            }
+            if (selectedTipe) {
+                tipePesawatSelect.val(selectedTipe);
+            }
+        }
+
+        if (oldJenisPesawat) {
+            $('#jenis_pesawat').val(oldJenisPesawat);
+            populateTipePesawat(oldJenisPesawat, oldTipePesawat);
+        }
+
+        $('#jenis_pesawat').change(function() {
+            var jenisPesawat = $(this).val();
+            populateTipePesawat(jenisPesawat);
+        });
+    });
+</script>
 
   @include('admin.layout.footer-admin')
 

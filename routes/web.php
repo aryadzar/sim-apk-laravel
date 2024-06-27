@@ -32,10 +32,10 @@ Route::group(['middleware' => ['auth', 'CheckRole:admin']], function(){
     Route::get('/admin/data-pesawat/detail-pesawat/{id}', [AdminController::class, 'detail_pesawat'])->name('detail_pesawat');
     Route::delete('/admin/data-pesawat/delete-pesawat/{id}', [AdminController::class, 'delete_pesawat'])->name('delete_pesawat');
     Route::post('/admin/data-pesawat/tambah-pesawat', [AdminController::class, 'tambah_pesawat'])->name('tambah_pesawat');
-    Route::get('/get-tipe-pesawat-options', [AdminController::class, 'getTipePesawatOptions'])->name('get_tipe_pesawat_options');
-    Route::get('/get-jenis-body-pesawat-options', [AdminController::class, 'getJenisBodyPesawatOptions'])->name('get_jenis_body_pesawat_options');
     Route::post('admin/data-users/detail-pesawat/update-img/{id}', [AdminController::class, 'update_foto_pesawat'])->name('update_foto_pesawat');
-    Route::delete('admin/data-users/user-details/delete-img/{id}', [AdminController::class, 'delete_foto_pesawat'])->name('delete_foto_pesawat');
+    Route::delete('admin/data-users/detail-pesawat/delete-img/{id}', [AdminController::class, 'delete_foto_pesawat'])->name('delete_foto_pesawat');
+    Route::post('/admin/data-pesawat/edit-details-pesawat/{id}', [AdminController::class, 'edit_detail_pesawat'])->name('edit_detail_pesawat');
+
 
 });
 

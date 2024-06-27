@@ -90,8 +90,8 @@
                                     <th scope="col">No Registrasi</th>
                                     <th scope="col">Foto Pesawat</th>
                                     <th scope="col">Nama Maskapai</th>
-                                    <th scope="col">Tipe Pesawat</th>
                                     <th scope="col">Jenis Pesawat</th>
+                                    <th scope="col">Tipe Pesawat</th>
                                     <th scope="col">Kapasitas Penumpang</th>
                                     <th scope="col">Action</th>
                                 </tr>
@@ -105,13 +105,13 @@
                                     <td>{{$no++}}</td>
                                     <td>{{$data->no_registrasi}}</td>
                                     <td>
-                                        <img src="{{asset("foto_pesawat/".$data->foto_pesawat)}}" alt="foto" height="100px">
+                                        <img src="{{asset("foto_pesawat/".$data->foto_pesawat)}}" alt="foto" height="30px">
                                     </td>
                                     <td> {{$data->nama_maskapai}} </td>
-                                    <td> {{$data->tipe_pesawat}} </td>
                                     <td> {{$data->jenis_pesawat}} </td>
+                                    <td> {{$data->tipe_pesawat}} </td>
                                     <td> {{$data->kapasitas_penumpang}} </td>
-                                    <td width="15%">
+                                    <td width="20%">
                                         <a href="{{route('detail_pesawat', $data->id)}}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Detail"><i class="ri-eye-line"></i></a>
                                         <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#delete_pesawat{{$data->id}}" data-bs-placement="top" title="Delete">
                                             <i class="bi bi-trash"></i>
@@ -284,11 +284,12 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
+
                                 <div class="form-floating mb-3">
                                     <select class="form-select" id="jenis_pesawat" name="jenis_pesawat" required>
-                                        <option disabled selected>Pilih Jenis Pesawat</option>
-                                        <option value="Komersial">Komersial</option>
-                                        <option value="Militer">Militer</option>
+                                        <option disabled {{ old('jenis_pesawat') ? '' : 'selected' }}>Pilih Jenis Pesawat</option>
+                                        <option value="Boeing" {{ old('jenis_pesawat') == 'Boeing' ? 'selected' : '' }}>Boeing</option>
+                                        <option value="Airbus" {{ old('jenis_pesawat') == 'Airbus' ? 'selected' : '' }}>Airbus</option>
                                     </select>
                                     <label for="jenis_pesawat">Silahkan Pilih Jenis Pesawat</label>
                                     @error('jenis_pesawat')
@@ -298,37 +299,28 @@
 
                                 <div class="form-floating mb-3">
                                     <select class="form-select" id="tipe_pesawat" name="tipe_pesawat" required>
-                                        <option disabled selected>Pilih Tipe Pesawat</option>
+                                        <option disabled {{ old('tipe_pesawat') ? '' : 'selected' }}>Pilih Tipe Pesawat</option>
+                                        <!-- Options will be populated by AJAX -->
                                     </select>
                                     <label for="tipe_pesawat">Silahkan Pilih Tipe Pesawat</label>
                                     @error('tipe_pesawat')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-
                                 <div class="form-floating mb-3">
-                                    <select class="form-select" id="jenis_body_pesawat" name="jenis_body_pesawat" required>
-                                        <option disabled selected>Pilih Jenis Body Pesawat</option>
-                                    </select>
-                                    <label for="jenis_body_pesawat">Silahkan Pilih Jenis Body Pesawat</label>
-                                    @error('jenis_body_pesawat')
+                                    <input type="number" name="kapasitas_penumpang" class="form-control @error('kapasitas_penumpang') is-invalid @enderror" id="kapasitas_penumpang" placeholder="No Registrasi" value="{{ old('kapasitas_penumpang') }}" required>
+                                    <label for="kapasitas_penumpang">Kapasitas Penumpang</label>
+                                    @error('kapasitas_penumpang')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input type="number" name="kapasitas_penumpang" class="form-control @error('kapasitas_penumpang') is-invalid @enderror" id="kapasitas_penumpang" placeholder="No Registrasi" value="{{ old('kapasitas_penumpang') }}" required>
-                                <label for="kapasitas_penumpang">Kapasitas Penumpang</label>
-                                @error('kapasitas_penumpang')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input type="file" class="form-control @error('foto_pesawat') is-invalid @enderror" name="foto_pesawat" id="foto_pesawat" accept=".jpg, .jpeg, .png" placeholder="Pilih Foto Pesawat" required>
-                                <label for="foto_pesawat">Pilih Foto Pesawat</label>
-                                @error('foto_pesawat')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <div class="form-floating mb-3">
+                                    <input type="file" class="form-control @error('foto_pesawat') is-invalid @enderror" name="foto_pesawat" id="foto_pesawat" accept=".jpg, .jpeg, .png" placeholder="Pilih Foto Pesawat" required>
+                                    <label for="foto_pesawat">Pilih Foto Pesawat</label>
+                                    @error('foto_pesawat')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
                             </div>
                         </div>
 
@@ -351,85 +343,45 @@
 
   </main><!-- End #main -->
 
-  <script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Data tipe pesawat berdasarkan jenis pesawat
-    const tipePesawatData = {
-        Komersial: [
-            { value: 'Airbus', label: 'Airbus' },
-            { value: 'Boeing', label: 'Boeing' }
-        ],
-        Militer: [
-            { value: 'F16', label: 'F16' },
-            { value: 'Sukhoi', label: 'Sukhoi' }
-        ]
-    };
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    // Data jenis body pesawat berdasarkan tipe pesawat
-    const jenisBodyPesawatData = {
-        Airbus: [
-            { value: 'A220', label: 'A220' },
-            { value: 'A320', label: 'A320' },
-            { value: 'A380', label: 'A380' },
-            { value: 'A350', label: 'A350' },
-        ],
-        Boeing: [
-            { value: '737', label: '737' },
-            { value: '747', label: '747' },
-            { value: '767', label: '767' },
-            { value: '777', label: '777' },
-        ],
-        F16: [
-            { value: 'Block 50', label: 'Block 50' },
-            { value: 'Block 60', label: 'Block 60' }
-        ],
-        Sukhoi: [
-            { value: 'Su-27', label: 'Su-27' },
-            { value: 'Su-30', label: 'Su-30' }
-        ]
-    };
+<script>
+    $(document).ready(function() {
+        var tipePesawatData = {
+            'Boeing': ['737', '747', '767', '777', '787'],
+            'Airbus': ['A320', 'A330', 'A340', 'A350', 'A380']
+        };
 
-    // Referensi ke elemen HTML
-    const jenisPesawatSelect = document.getElementById('jenis_pesawat');
-    const tipePesawatSelect = document.getElementById('tipe_pesawat');
-    const jenisBodyPesawatSelect = document.getElementById('jenis_body_pesawat');
+        var oldJenisPesawat = "{{ old('jenis_pesawat') }}";
+        var oldTipePesawat = "{{ old('tipe_pesawat') }}";
 
-    // Event listener untuk perubahan pada dropdown jenis pesawat
-    jenisPesawatSelect.addEventListener('change', function () {
-        const jenisPesawat = this.value;
-        const tipePesawatOptions = tipePesawatData[jenisPesawat] || [];
+        function populateTipePesawat(jenisPesawat, selectedTipe) {
+            var tipePesawatSelect = $('#tipe_pesawat');
+            tipePesawatSelect.empty();
+            tipePesawatSelect.append('<option disabled>Pilih Tipe Pesawat</option>');
+            if (jenisPesawat in tipePesawatData) {
+                tipePesawatData[jenisPesawat].forEach(function(tipe) {
+                    tipePesawatSelect.append('<option value="' + tipe + '">' + tipe + '</option>');
+                });
+            }
+            if (selectedTipe) {
+                tipePesawatSelect.val(selectedTipe);
+            }
+        }
 
-        // Hapus opsi sebelumnya
-        tipePesawatSelect.innerHTML = '<option disabled selected>Pilih Tipe Pesawat</option>';
-        jenisBodyPesawatSelect.innerHTML = '<option disabled selected>Pilih Jenis Body Pesawat</option>';
+        if (oldJenisPesawat) {
+            $('#jenis_pesawat').val(oldJenisPesawat);
+            populateTipePesawat(oldJenisPesawat, oldTipePesawat);
+        }
 
-        // Tambah opsi baru
-        tipePesawatOptions.forEach(function (tipe) {
-            const option = document.createElement('option');
-            option.value = tipe.value;
-            option.textContent = tipe.label;
-            tipePesawatSelect.appendChild(option);
+        $('#jenis_pesawat').change(function() {
+            var jenisPesawat = $(this).val();
+            populateTipePesawat(jenisPesawat);
         });
     });
+</script>
 
-    // Event listener untuk perubahan pada dropdown tipe pesawat
-    tipePesawatSelect.addEventListener('change', function () {
-        const tipePesawat = this.value;
-        const jenisBodyPesawatOptions = jenisBodyPesawatData[tipePesawat] || [];
-
-        // Hapus opsi sebelumnya
-        jenisBodyPesawatSelect.innerHTML = '<option disabled selected>Pilih Jenis Body Pesawat</option>';
-
-        // Tambah opsi baru
-        jenisBodyPesawatOptions.forEach(function (jenis) {
-            const option = document.createElement('option');
-            option.value = jenis.value;
-            option.textContent = jenis.label;
-            jenisBodyPesawatSelect.appendChild(option);
-        });
-    });
-});
-  </script>
+</script>
   @include('admin.layout.footer-admin')
 
 

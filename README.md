@@ -12,4 +12,9 @@
 - Ini adalah project SIM-APK sebelumnya dengan upgrade menggunakan framework laravel 
 - project sebelumnya [SIM-APK-OLD](https://github.com/aryadzar/sim-apk) 
 - untuk dokumentasi SKPL silahkan dilihat pada project tersebut
+- Refrensi Template [Template Nice Admin](https://bootstrapmade.com/demo/templates/NiceAdmin/index.html)
+
+<iframe src="https://bootstrapmade.com/demo/templates/NiceAdmin/index.html"> 
+
+</iframe>
 

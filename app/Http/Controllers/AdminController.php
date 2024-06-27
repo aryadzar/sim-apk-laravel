@@ -77,6 +77,34 @@ class AdminController extends Controller
             return response()->json(['error' => 'No file uploaded'], 400);
     }
 
+    public function edit_detail_pesawat(Request $request, $id){
+
+        $data = Pesawat::find($id);
+
+        $request->validate([
+            // 'no_registrasi' => 'required|regex:/^[A-Za-z]+-\d+$/|unique:pesawats,no_registrasi',
+            'no_registrasi' =>[
+                'required',
+                'regex:/^[A-Za-z]+-\d+$/',
+                Rule::unique('pesawats')->ignore($data->id)
+            ],
+            'nama_maskapai' => 'required|string|max:255',
+            "kapasitas_penumpang" => "required|numeric",
+            "jenis_pesawat" => 'required',
+            "tipe_pesawat" => 'required',
+        ], [
+            'no_registrasi.required' => 'Nomor registrasi wajib diisi.',
+            'no_registrasi.regex' => 'Format registrasi harus huruf strip angka, Contoh Format : H = huruf A = Angka (HHH....-AAAA....)',
+            'no_registrasi.unique' => 'Nomor registrasi ini sudah digunakan.',
+        ]);
+
+        // Update data pengguna
+        $data->update($request->all());
+
+        // Redirect ke halaman detail pengguna
+        return redirect()->route('detail_pesawat', $id)->with('success', 'User details updated successfully.');
+
+    }
     public function delete_foto_pesawat($id)
     {
         $user = Pesawat::find($id);
@@ -105,14 +133,13 @@ class AdminController extends Controller
             "foto_pesawat" => "required|file|image|max:5120",
             "jenis_pesawat" => 'required',
             "tipe_pesawat" => 'required',
-            "jenis_body_pesawat" => 'required'
         ], [
             'no_registrasi.required' => 'Nomor registrasi wajib diisi.',
             'no_registrasi.regex' => 'Format registrasi harus huruf strip angka, Contoh Format : H = huruf A = Angka (HHH....-AAAA....)',
             'no_registrasi.unique' => 'Nomor registrasi ini sudah digunakan.',
         ]);
 
-        $data = new Pesawat();
+        $data = Pesawat::create($request->all());
 
         if($request->hasFile("foto_pesawat")){
             $file = $request->file('foto_pesawat');
@@ -120,11 +147,7 @@ class AdminController extends Controller
             $uniqueName = time(). "-".uniqid()."-" . $file->getClientOriginalName();
 
             $file->move('foto_pesawat/', $uniqueName);
-            $data->no_registrasi = $request->no_registrasi;
-            $data->nama_maskapai = $request->nama_maskapai;
-            $data->jenis_pesawat = $request->jenis_pesawat;
-            $data->kapasitas_penumpang = $request->kapasitas_penumpang;
-            $data->tipe_pesawat = $request->tipe_pesawat." ". $request->jenis_body_pesawat;
+
             $data->foto_pesawat = $uniqueName;
 
             $data->save();
