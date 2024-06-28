@@ -20,6 +20,9 @@ Website Demo : https://sim-apk-laravel.aryadzar.my.id/
 
 https://github.com/aryadzar/sim-apk-laravel/assets/112409058/512449d2-73bf-46af-936f-b29c99da2af0
 
-## Progress Selanjutnya
+## Progress Kedua
 
-Coming soon ... Stay Tuned 
+
+https://github.com/aryadzar/sim-apk-laravel/assets/112409058/00a363c1-5601-44a1-a128-59d6352dfab9
+
+
