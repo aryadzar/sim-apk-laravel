@@ -7,12 +7,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ManagerController;
 
 Route::get('/', function () {
     return view('welcome');
 })->name('login');
 
-
+// Role Admin
 Route::group(['middleware' => ['auth', 'CheckRole:admin']], function(){
     //Dashboard Admin
     Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin_dashboard');
@@ -36,8 +37,20 @@ Route::group(['middleware' => ['auth', 'CheckRole:admin']], function(){
     Route::delete('admin/data-users/detail-pesawat/delete-img/{id}', [AdminController::class, 'delete_foto_pesawat'])->name('delete_foto_pesawat');
     Route::post('/admin/data-pesawat/edit-details-pesawat/{id}', [AdminController::class, 'edit_detail_pesawat'])->name('edit_detail_pesawat');
 
+    // Export Excel
+    Route::get('/export-excel-user', [AdminController::class, 'export_excel_users'])->name('export_excel_users');
+    Route::get('/export-excel-pesawat', [AdminController::class, 'export_excel_pesawat'])->name('export_excel_pesawat');
 
 });
+
+// Role Manager
+Route::group(['middleware' => ['auth', 'CheckRole:manager']], function(){
+    //Dashboard Manager
+    Route::get('/manager', [ManagerController::class, 'dashboard'])->name('manager_dashboard');
+
+});
+
+
 
 Route::group(['middleware' => ['auth', 'CheckRole:admin,teknisi,manager']], function(){
 
@@ -76,7 +89,6 @@ Route::group(['middleware' => ['auth', 'CheckRole:admin,teknisi,manager']], func
 
     Route::delete('admin/data-users/user-details/delete-img/{id}', [AdminController::class, 'removeProfileImage'])->name('remove_profile_image');
     Route::post('admin/data-users/user-details/update-img/{id}', [AdminController::class, 'updateProfile'])->name('update_profile');
-
 });
 
 

@@ -2,16 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pesawat;
+use App\Exports\PesawatExport;
 use App\Models\User;
+use App\Models\Pesawat;
+use App\Exports\UsersExport;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminController extends Controller
 {
+
+    // Menampilkan Jumlah User pada tampilan dashboard
     public function dashboard(){
        $teknisi =  DB::table('users')->select('*')->where('role' , '=', 'teknisi')->count();
        $manager =  DB::table('users')->select('*')->where('role' , '=', 'manager')->count();
@@ -24,7 +29,17 @@ class AdminController extends Controller
 
     }
 
+    // Export Excel
 
+    public function export_excel_users(){
+        return Excel::download(new UsersExport ,"users-data.xlsx");
+    }
+
+    public function export_excel_pesawat(){
+        return Excel::download(new PesawatExport ,"pesawat-data.xlsx");
+    }
+
+    //Menampilkan data data user sesuai dengan rolenya
     public function read(){
         $data_teknisi = DB::table('users')->select('*')->where('role' , '=', 'teknisi')->get();
         $data_manager = DB::table('users')->select('*')->where('role' , '=', 'manager')->get();
@@ -35,11 +50,15 @@ class AdminController extends Controller
         return view("admin.users-table", compact("data_teknisi", "data_manager", "data_admin", "data_pesawat"));
     }
 
+    // Menampilkan table pesawat
     public function read_pesawat(){
         $data_pesawat =  DB::table('pesawats')->select('*')->get();
 
         return view("admin.data-pesawat", compact('data_pesawat'));
     }
+
+    //  dari update pesawat sampai dengan
+    //  delete pesawat itu adalah untuk mengelola data pesawat
 
     public function update_foto_pesawat(Request $request,$id){
             // Validasi file yang diunggah
@@ -178,6 +197,7 @@ class AdminController extends Controller
         return redirect()->route('data_pesawat');
     }
 
+    // Sampai Akhir sudah mengelola data user
     public function change_password_user(Request $request){
         $data = User::find($request->id);
 

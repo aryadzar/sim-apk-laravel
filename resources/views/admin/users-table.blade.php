@@ -61,7 +61,16 @@
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambah_user">
                 Tambah User
               </button>
-        </div>
+
+              <a href="{{ route('export_excel_users')}}" class="btn btn-success" style="margin-right: 20px;" >Export Excel</a>
+
+
+              <form >
+                <input type="file" name="data_user" id="upload_data" style="display:none;">
+                <label for="upload_data" class="btn btn-primary" style="margin-right: 20px">Import Data</label>
+              </form>
+            </div>
+
         @if ($errors->any())
         <div class="alert alert-danger alert-dismissible fade show">
             <ul>
@@ -75,9 +84,9 @@
           <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Data Manager</h5>
-
                 <!-- Table with hoverable rows -->
                 <div class="table-responsive">
+
                     <table class="table table-hover datatable">
                         <thead>
                             <tr>

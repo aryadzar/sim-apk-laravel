@@ -61,6 +61,7 @@
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambah_user">
                 Tambah Pesawat
               </button>
+              <a href="{{ route('export_excel_pesawat')}}" class="btn btn-success" style="margin-right: 20px;" >Export Excel</a>
         </div>
         @if ($errors->any())
         <div class="alert alert-danger alert-dismissible fade show">
@@ -83,6 +84,7 @@
                     @endif
                     <!-- Table with hoverable rows -->
                     <div class="table-responsive">
+
                         <table class="table table-hover datatable table-responsive">
                             <thead>
                                 <tr>

@@ -22,7 +22,7 @@ class LoginController extends Controller
                 case 'admin':
                     return redirect()->intended('/admin');
                 case 'manager':
-                    return redirect()->route('/manager');
+                    return redirect()->route('manager_dashboard');
                 case 'teknisi':
                     return redirect()->route('/teknisi');
                 default:
