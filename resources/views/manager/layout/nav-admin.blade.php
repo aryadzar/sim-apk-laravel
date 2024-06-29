@@ -2,7 +2,7 @@
   <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
-      <a href="/admin" class="logo d-flex align-items-center">
+      <a href="/manager" class="logo d-flex align-items-center">
         <img src=" {{asset('img/sim-apk-logo.png')}}" alt="">
         <span class="d-none d-lg-block">SIM-APK </span>
       </a>
@@ -24,7 +24,7 @@
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
             <li class="dropdown-header">
               <h6>{{ Auth::user()->name}}</h6>
-              <span>Administrator</span>
+              <span>Manager</span>
             </li>
             <li>
               <hr class="dropdown-divider">

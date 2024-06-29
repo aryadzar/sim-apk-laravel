@@ -43,15 +43,19 @@ Route::group(['middleware' => ['auth', 'CheckRole:admin']], function(){
 
 });
 
+
 // Role Manager
 Route::group(['middleware' => ['auth', 'CheckRole:manager']], function(){
     //Dashboard Manager
     Route::get('/manager', [ManagerController::class, 'dashboard'])->name('manager_dashboard');
 
+    //Mengelola Jadwal Pesawat
+    Route::get('/manager/jadwal-pemeliharaan', [ManagerController::class, 'jadwal_pemeliharaan'])->name('jadwal_pemeliharaan');
+
 });
 
 
-
+//Melihat Profile User
 Route::group(['middleware' => ['auth', 'CheckRole:admin,teknisi,manager']], function(){
 
     Route::get('/user/user-details/{id}', function($id){

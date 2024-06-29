@@ -1,7 +1,7 @@
 <aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item">
-            <a class="nav-link {{ request()->routeIs('admin_dashboard') ? 'active' : 'collapsed' }}" href="{{ route('admin_dashboard') }}">
+            <a class="nav-link {{ request()->routeIs('manager_dashboard') ? 'active' : 'collapsed' }}" href="{{ route('manager_dashboard') }}">
                 <i class="bi bi-grid"></i>
                 <span>Dashboard</span>
             </a>
@@ -14,12 +14,12 @@
             <ul id="data-users-nav" class="nav-content collapse {{ request()->routeIs(['data_users', 'data_pesawat', 'user_details']) ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
                 <li>
                     <a href="{{ route('data_users') }}" class="{{ request()->routeIs(['data_users', 'user_details']) ? 'active' : '' }}">
-                        <i class="bi bi-circle"></i><span>Data Users</span>
+                        <i class="bi bi-circle"></i><span>Jadwal Pemeliharaan</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('data_pesawat') }}" class="{{ request()->routeIs('data_pesawat') ? 'active' : '' }}">
-                        <i class="bi bi-circle"></i><span>Data Pesawat</span>
+                        <i class="bi bi-circle"></i><span>Riwayat Teknisi</span>
                     </a>
                 </li>
             </ul>

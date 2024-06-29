@@ -4,7 +4,17 @@
 
 <body>
 
-  @include('admin.layout.nav-admin')
+    @if ($target_user->role == 'admin')
+
+        @include('admin.layout.nav-admin')
+        @include('admin.layout.sidebar-admin')
+
+    @elseif ($target_user->role == 'manager')
+        @include('manager.layout.nav-admin')
+
+        @include('manager.layout.sidebar-admin')
+
+    @endif
 
 
 <!-- ======= Sidebar ======= -->
