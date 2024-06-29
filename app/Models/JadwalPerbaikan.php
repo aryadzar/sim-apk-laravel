@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Pesawat extends Model
+class JadwalPerbaikan extends Model
 {
     use HasFactory;
 
+    protected $table = 'jadwal_perbaikan';
     protected $guarded = [];
 
-    public function jadwalperbaikan(){
-        return $this->hasMany(JadwalPerbaikan::class);
+    public function pesawat(){
+        return $this->belongsTo(Pesawat::class, "id_pesawat");
     }
-
 }

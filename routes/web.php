@@ -51,6 +51,9 @@ Route::group(['middleware' => ['auth', 'CheckRole:manager']], function(){
 
     //Mengelola Jadwal Pesawat
     Route::get('/manager/jadwal-pemeliharaan', [ManagerController::class, 'jadwal_pemeliharaan'])->name('jadwal_pemeliharaan');
+    Route::post('/manager/jadwal-pemeliharaan/tambah-jadwal', [ManagerController::class, 'tambah_jadwal_pemeliharaan'])->name('tambah_jadwal_pemeliharaan');
+    Route::get('/manager/jadwal-pemeliharaan/detail-pesawat/{id}', [ManagerController::class, 'detail_pesawat'])->name('detail_pesawat_manager');
+    Route::post('/manager/jadwal-pemeliharaan/edit-detail-pesawat/{id}', [ManagerController::class, 'edit_detail_pesawat'])->name('edit_detail_pesawat_manager');
 
 });
 
